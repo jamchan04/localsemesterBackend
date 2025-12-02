@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 
 interface RegisterBody {
@@ -35,10 +35,5 @@ export class AuthController {
   @Post('refresh')
   refresh(@Body() body: RefreshBody) {
     return this.authService.refreshTokens(body.refreshToken);
-  }
-
-  @Get('verify')
-  verify(@Query('token') token: string) {
-    return this.authService.verifyEmail(token);
   }
 }

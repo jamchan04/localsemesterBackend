@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import nullPhoto from "../../../assets/originalimg.png";
-import { Modal } from "../../../components/modal/modal"; 
+import { Modal } from "../../../components/modal/modal";
 
-const MemberModal = ({ member, isAdmin, onClose, onSave }) => {
+const MemberModal = ({ member, isAdmin, onClose, onSave, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editMessage, setEditMessage] = useState(member.article || "");
 
@@ -11,7 +11,7 @@ const MemberModal = ({ member, isAdmin, onClose, onSave }) => {
   }, [member.article]);
 
   const handleSave = () => {
-    if (!editMessage.trim()) return; 
+    if (!editMessage.trim()) return;
     onSave(editMessage);
     setIsEditing(false);
   };
@@ -49,12 +49,20 @@ const MemberModal = ({ member, isAdmin, onClose, onSave }) => {
       )}
 
       {isAdmin && !isEditing && (
-        <button
-          onClick={() => setIsEditing(true)}
-          className="w-full mt-4 py-2 bg-[#37b4fe] text-white rounded hover:bg-[#2b9ed4]"
-        >
-          수정하기
-        </button>
+        <div className="flex flex-col gap-2 mt-4">
+          <button
+            onClick={() => setIsEditing(true)}
+            className="w-full py-2 bg-[#37b4fe] text-white rounded hover:bg-[#2b9ed4]"
+          >
+            수정하기
+          </button>
+          <button
+            onClick={onDelete}
+            className="w-full py-2 bg-red-500 text-white rounded hover:bg-red-600"
+          >
+            삭제하기
+          </button>
+        </div>
       )}
 
       {isEditing && (

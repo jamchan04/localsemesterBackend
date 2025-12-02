@@ -15,17 +15,14 @@ export const memberLoader = async () => {
     const mergedMembers = await Promise.all(
       members.map(async (member) => {
         const user = users.find((u) => u.id === member.userId);
-
-       
-        const photo = user?.photoId
-          ? await getPhoto(user.photoId)
-          : "";
+        const photo = user?.photoId ? await getPhoto(user.photoId) : "";
 
         return {
           id: member.id,
-          username: user?.username || "알 수 없음",
+          userId: member.userId,
+          username: user?.username || "알수없음",
           article: member.article,
-          photo, 
+          photo,
         };
       })
     );

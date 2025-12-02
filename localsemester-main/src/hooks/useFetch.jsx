@@ -29,19 +29,18 @@ export const useFetch = () => {
             : undefined,
       });
 
-      const response = await request.json();
+      const responseData = await request.json();
 
-      setResponse(response);
+      setResponse(responseData);
 
-      // 콜백 호출
       if (callback && typeof callback === "function") {
-        callback();
+        callback(responseData);
       }
 
-      return true;
+      return responseData;
     } catch (error) {
       console.error("Fetcher Error:", error);
-      return false;
+      return null;
     } finally {
       setLoading(false);
     }
