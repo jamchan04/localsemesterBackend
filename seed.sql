@@ -91,13 +91,11 @@ CREATE TABLE photos (
 
 INSERT INTO users (id, username, email, user_id, password, state, create_at, photo_id, message, profile_photo) VALUES
   (1, '박설호', 'root@example.com', 'root', '$2b$10$zdRgRo8Ydm.1R2j1xnqhwur6270gwL8bYm51p3RV2Jqyx/7YjRZpS', 777, '2025-05-07 19:17:39', 1, '안녕하세요 박설호입니다. ', NULL),
-  (2, '김지원', 'root1@example.com', 'root1', '$2b$10$zdRgRo8Ydm.1R2j1xnqhwur6270gwL8bYm51p3RV2Jqyx/7YjRZpS', 777, '2025-05-07 19:17:39', 7, '안녕하세요 김지원입니다.', NULL),
-  (3, '김예찬', 'root2@example.com', 'root2', '$2b$10$zdRgRo8Ydm.1R2j1xnqhwur6270gwL8bYm51p3RV2Jqyx/7YjRZpS', 777, '2025-05-07 19:17:39', 5, '안녕하세요 관리자 김예찬입니다.', NULL),
-  (4, '조건희', 'root3@example.com', 'root3', '$2b$10$zdRgRo8Ydm.1R2j1xnqhwur6270gwL8bYm51p3RV2Jqyx/7YjRZpS', 777, '2025-05-07 19:17:39', 4, '', NULL),
-  (5, '김태현', 'root4@example.com', 'root4', '$2b$10$zdRgRo8Ydm.1R2j1xnqhwur6270gwL8bYm51p3RV2Jqyx/7YjRZpS', 777, '2025-05-07 19:17:39', 3, '', NULL),
-  (6, '차승환', 'admin@example.com', 'admin', '$2b$10$zdRgRo8Ydm.1R2j1xnqhwur6270gwL8bYm51p3RV2Jqyx/7YjRZpS', 1, '2025-05-20 19:17:39', NULL, '저는 차승환입니다.', NULL),
-  (7, '이보마루', 'bobomaru@example.com', 'bobomaru', '$2b$10$jBdUJzSeFQpn62FJyfA3COdE.D14mGghG0H7a.WRadWYB.WWHu1mC', 1, '2025-06-21 20:09:24', 10, '', ''),
-  (8, 'Temp User', 'temp@example.com', 'tempuser', '$2b$10$CvGQx/GIoXWSo.489qnJXeeG0Uyj2JeVJeYl64QaBgxJrnvq1AyMC', 1, '2025-12-01 00:00:00', NULL, '', NULL);
+  (2, '김지성', 'root1@example.com', 'root1', '$2b$10$zdRgRo8Ydm.1R2j1xnqhwur6270gwL8bYm51p3RV2Jqyx/7YjRZpS', 777, '2025-05-07 19:17:39', 7, '안녕하세요 김지원입니다.', NULL),
+  (3, '오예찬', 'root2@example.com', 'root2', '$2b$10$zdRgRo8Ydm.1R2j1xnqhwur6270gwL8bYm51p3RV2Jqyx/7YjRZpS', 777, '2025-05-07 19:17:39', 5, '안녕하세요 관리자 김예찬입니다.', NULL),
+  (4, '조건하', 'root3@example.com', 'root3', '$2b$10$zdRgRo8Ydm.1R2j1xnqhwur6270gwL8bYm51p3RV2Jqyx/7YjRZpS', 777, '2025-05-07 19:17:39', 4, '', NULL),
+  (5, '안태현', 'root4@example.com', 'root4', '$2b$10$zdRgRo8Ydm.1R2j1xnqhwur6270gwL8bYm51p3RV2Jqyx/7YjRZpS', 777, '2025-05-07 19:17:39', 3, '', NULL),
+  (7, '이세현', 'bobomaru@example.com', 'bobomaru', '$2b$10$jBdUJzSeFQpn62FJyfA3COdE.D14mGghG0H7a.WRadWYB.WWHu1mC', 1, '2025-06-21 20:09:24', 10, '', ''),
 INSERT INTO sessions (id, session_id, user_id) VALUES
   (1, 1, 1),
   (2, 1750513357613, 1),
