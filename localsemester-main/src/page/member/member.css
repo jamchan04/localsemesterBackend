@@ -1,0 +1,41 @@
+.neon-text {
+  color: #ffffff;
+  font-weight: bold;
+  text-shadow:
+    0 0 8px #bce7ff,        
+    0 0 16px #89d6ff,        
+    0 0 24px #55c3ff,        
+    0 0 32px #37b4fe,        
+    0 0 48px rgba(55, 180, 254, 0.5),
+    0 0 64px rgba(55, 180, 254, 0.3);
+}
+
+@keyframes titleFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-title-fade {
+  animation: titleFadeIn 1s ease forwards; 
+}
+
+.speed-text {
+  font-weight: 800;
+  font-size: 2rem;
+  letter-spacing: -1px;
+
+  background: linear-gradient(to right,
+  #37b5ff , 
+  #aabee1 10%, 
+  #e1a9d0 30%,
+  #db7dc0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}

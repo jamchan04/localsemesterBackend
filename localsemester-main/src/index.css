@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  overscroll-behavior-y: none;
+  overscroll-behavior-x: none;
+}
+
+.ProseMirror:focus {
+  outline: none;
+}
+
+.ProseMirror {
+  min-height: 500px;
+}
+
+.ProseMirror p.is-empty::before {
+  content: attr(data-placeholder);
+  color: gray;
+  float: left;
+  height: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.ProseMirror > *:not(:empty) ~ .custom-placeholder {
+  display: none;
+}

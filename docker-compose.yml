@@ -1,0 +1,62 @@
+version: "3.8"
+
+services:
+  db:
+    image: mysql:8
+    container_name: semester_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: localsemester
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./mysql:/var/lib/mysql
+      - ./seed.sql:/docker-entrypoint-initdb.d/seed.sql
+
+  backend:
+    build: ./backend
+    container_name: semester_backend
+    restart: always
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASS: 1234
+      DB_NAME: localsemester
+      DB_USERNAME: root
+      DB_PASSWORD: 1234
+      DB_DATABASE: localsemester
+      DB_SYNCHRONIZE: "true"
+      DB_LOGGING: "true"
+      PORT: 3000
+    ports:
+      - "4000:3000"
+    command: npm run start:dev
+    volumes:
+      - ./backend:/app
+      - backend-node-modules:/app/node_modules
+
+  frontend:
+    build: ./localsemester-main
+    container_name: semester_frontend
+    restart: always
+    ports:
+      - "3000:3000"
+      - "5000:5000"
+    depends_on:
+      - backend
+    environment:
+      HOST: 0.0.0.0
+      PORT: 3000
+      CHOKIDAR_USEPOLLING: "true"
+      WATCHPACK_POLLING: "true"
+    volumes:
+      - ./localsemester-main:/app
+      - frontend-node-modules:/app/node_modules
+
+volumes:
+  backend-node-modules:
+  frontend-node-modules:
