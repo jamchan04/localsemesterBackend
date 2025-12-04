@@ -1,46 +1,20 @@
-// 세션 체크하는 함수
+// 세션 체크: 클라이언트에 저장된 세션 값만 있으면 통과시킵니다.
 export const checkSession = async () => {
   const session = sessionStorage.getItem("sessionId");
   const uid = sessionStorage.getItem("uid");
-  if (!session) return false;
-
-  try {
-    const req = await fetch(`/session?sessionId=${session}`);
-    const res = await req.json();
-
-    if (res[0].sessionId === Number(session) || res[0].uid === Number(uid)) {
-      return true;
-    }
-
-    return false;
-  } catch (err) {
-    console.error("세션 체크 중 오류:", err);
-    return false;
-  }
+  if (!session || !uid) return false;
+  return true;
 };
 
-// crud 시 인증하기
+// CRUD 인증 확인: 클라이언트 세션 값만 확인
 export const checkAuth = async () => {
   const uid = sessionStorage.getItem("uid");
   const sessionId = sessionStorage.getItem("sessionId");
   if (!uid || !sessionId) return false;
-
-  try {
-    const req = await fetch(`/session?uid=${uid}&sessionId=${sessionId}`);
-    const res = await req.json();
-
-    if (res[0].uid === Number(uid) && res[0].sessionId === Number(sessionId)) {
-      return true;
-    }
-
-    return false;
-  } catch (err) {
-    console.error("세션 체크 중 오류:", err);
-    return false;
-  }
+  return true;
 };
 
-// 세션 저장 함수 (로그인 시)
+// 세션 저장 (로그인 시)
 export const saveSession = async (sessionData) => {
   const req = await fetch(`/session`, {
     method: "POST",
@@ -59,7 +33,7 @@ export const saveSession = async (sessionData) => {
   return true;
 };
 
-// 세션 제거 함수 (로그아웃 시)
+// 세션 제거 (로그아웃 시)
 export const clearSession = async () => {
   const mySession = sessionStorage.getItem("sessionId");
 
@@ -67,14 +41,17 @@ export const clearSession = async () => {
     const getSessionIndex = await fetch(`/session?sessionId=${mySession}`);
     const response = await getSessionIndex.json();
 
-    const sessionIndex = response[0].id;
+    const sessionIndex =
+      Array.isArray(response) && response.length > 0 ? response[0].id : null;
 
-    await fetch(`/session/${sessionIndex}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    if (sessionIndex) {
+      await fetch(`/session/${sessionIndex}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
   } catch (error) {
     console.error("로그아웃 오류 : ", error);
   } finally {

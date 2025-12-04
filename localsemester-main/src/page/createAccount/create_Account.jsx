@@ -58,7 +58,7 @@ export const CreateAccount = () => {
       return;
     }
 
-    const createAccount = await fetch("http://localhost:5000/user", {
+    const createAccount = await fetch("/auth/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -75,9 +75,7 @@ export const CreateAccount = () => {
       }),
     });
     const res = await createAccount.json();
-    console.log(res);
-
-    if (typeof res.id === "number") {
+    if (res?.user?.id) {
       openModal();
     } else {
       alert("회원가입 정보를 확인해주세요.");
@@ -88,7 +86,7 @@ export const CreateAccount = () => {
     onChange(e, "userId");
     const id = e.target.value;
 
-    fetch(`http://localhost:5000/user?userId=${id}`)
+    fetch(`/user?userId=${id}`)
       .then((data) => data.json())
       .then((response) => {
         if (response.length > 0) {
@@ -135,7 +133,7 @@ export const CreateAccount = () => {
 
     if (!isValid) return;
 
-    fetch(`http://localhost:5000/user?email=${email}`)
+    fetch(`/user?email=${email}`)
       .then((data) => data.json())
       .then((response) => {
         setInputValue((state) => {

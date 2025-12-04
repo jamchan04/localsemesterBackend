@@ -23,6 +23,31 @@ export class Semester {
   @Column({ name: 'photo_id', type: 'int', nullable: true })
   photoId?: number;
 
-  @Column({ name: 'src_json', type: 'longtext', nullable: true })
-  srcJson?: string;
+  @Column({
+    name: 'src_json',
+    type: 'longtext',
+    nullable: true,
+    transformer: {
+      to: (value?: unknown) => {
+        if (value === undefined || value === null) {
+          return null;
+        }
+        if (typeof value === 'string') {
+          return value;
+        }
+        return JSON.stringify(value);
+      },
+      from: (value?: string) => {
+        if (!value) {
+          return null;
+        }
+        try {
+          return JSON.parse(value);
+        } catch {
+          return value;
+        }
+      },
+    },
+  })
+  src?: unknown;
 }

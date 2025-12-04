@@ -8,8 +8,8 @@ export const EditButtonIcon = ({ editorHandler, id }) => {
   const { isModal, openModal, closeModal } = useModal();
   const navigate = useNavigate();
 
-  const onLogOut = () => {
-    clearSession();
+  const onLogOut = async () => {
+    await clearSession();
     navigate("/login", { replace: true });
   };
 

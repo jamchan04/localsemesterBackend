@@ -32,9 +32,9 @@ export const CommentForm = ({ articleId, url, getComment }) => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            userId: id,
+            userId: Number(id),
             username: username,
-            [key]: articleId,
+            [key]: Number(articleId),
             article: inputValue.comment,
             createAt: createAt(),
           }),

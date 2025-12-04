@@ -5,9 +5,9 @@ export class Session {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ name: 'session_id', type: 'bigint', nullable: true })
-  sessionId?: string;
+  @Column({ name: 'session_id', type: 'bigint' })
+  sessionId: number;
 
-  @Column({ name: 'user_id', type: 'int', nullable: true })
-  userId?: number;
+  @Column({ name: 'user_id', type: 'int' })
+  uid: number;
 }

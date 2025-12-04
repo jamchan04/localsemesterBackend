@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 // url 게시글을 저장해야하는 테이블
 // deletePosting 게시글 삭제 후 처리할 함수
 
-export const PostViewer = ({ item, me, url, deletePosting }) => {
+export const PostViewer = ({ item, me, url, deletePosting, apiUrl, editPath }) => {
   const { isModal, openModal, closeModal } = useModal();
   const { response, fetcher } = useFetch();
   const [photoId, setPhotoId] = useState(null);
@@ -42,13 +42,8 @@ export const PostViewer = ({ item, me, url, deletePosting }) => {
     {
       name: "삭제하기",
       action: async () => {
-        await fetcher({ url: `${url}/${item.id}`, method: "DELETE" });
-        if (response?.photoId) {
-          await fetch(`/photo/${response?.photoId}`, {
-            method: "DELETE",
-            headers: { "Content-Type": "application/json" },
-          });
-        }
+        const targetUrl = apiUrl || url;
+        await fetcher({ url: `${targetUrl}/${item.id}`, method: "DELETE" });
         if (typeof deletePosting === "function") {
           deletePosting();
         }
@@ -59,7 +54,8 @@ export const PostViewer = ({ item, me, url, deletePosting }) => {
     {
       name: "수정하기",
       action: () => {
-        navigate(`${url}Edit/${item.id}`);
+        const editUrl = editPath ? `${editPath}/${item.id}` : `${url}Edit/${item.id}`;
+        navigate(editUrl);
       },
     },
   ];

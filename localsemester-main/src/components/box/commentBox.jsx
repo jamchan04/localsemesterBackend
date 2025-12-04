@@ -13,24 +13,21 @@ export const CommentBox = ({ comment, url, deleteComment }) => {
   const { id } = useMyProfile((state) => state.myProfile);
 
   const deleteButton = async (id) => {
-    if (typeof id !== "number") {
-      return;
-    }
-    const session = checkAuth();
-    if (session) {
-      try {
-        await fetch(`${url}/${id}`, {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-        });
-        if (typeof deleteComment === "function") {
-          deleteComment(id);
-        }
-      } catch (error) {
-        console.error(error);
+    try {
+      const session = await checkAuth();
+      if (!session) {
+        alert("회원정보가 일치하지 않습니다.");
+        return;
       }
-    } else {
-      alert("회원정보가 일치하지 않습니다.");
+      await fetch(`${url}/${id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (typeof deleteComment === "function") {
+        deleteComment(id);
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 

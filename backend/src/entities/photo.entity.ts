@@ -5,6 +5,6 @@ export class Photo {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'text', nullable: true })
-  src?: string;
+  @Column({ type: 'longtext' })
+  src: string;
 }

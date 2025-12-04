@@ -1,9 +1,9 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "../../../components/button/button";
 import { Input } from "../../../components/input/input";
 import useChange from "../../../hooks/useChange";
-import { useEffect, useState } from "react";
-import { checkAuth, clearSession } from "../../../auth/auth";
-import { useNavigate } from "react-router-dom";
+import { clearSession } from "../../../auth/auth";
 
 export const ChangeLoginInfModal = ({ id, changeId }) => {
   const { inputValue, onChange } = useChange({
@@ -12,61 +12,57 @@ export const ChangeLoginInfModal = ({ id, changeId }) => {
     value: "",
   });
   const [checked, setChecked] = useState(false);
-  const navigate = useNavigate();
   const [error, setError] = useState(false);
+  const navigate = useNavigate();
 
   const content = changeId
     ? {
         title: "아이디 변경",
-        article: "아이디를 변경하시고 다시 로그인 해주세요.",
-        placeholder: "사용하시는 아이디와 비밀번호를 입력해주세요",
-        body: { userId: inputValue.value },
+        placeholder: "새 아이디를 입력해주세요",
+        body: { userId: inputValue.value.trim() },
       }
     : {
         title: "비밀번호 변경",
-        article: "비밀번호를 변경하시고 다시 로그인 해주세요.",
-        placeholder: "사용하시는 아이디와 비밀번호를 입력해주세요",
-        body: { password: inputValue.value },
+        placeholder: "새 비밀번호를 입력해주세요",
+        body: { password: inputValue.value.trim() },
       };
 
+  // 현재 계정 정보 검증
   const checkUserInf = async () => {
-    const session = await checkAuth();
-    if (!session) {
-      navigate("/login", { replace: true });
-      return;
-    }
-
     try {
-      const req = await fetch(`/user/${id}`);
-      const res = await req.json();
-
-      if (
-        res.userId === inputValue.userId &&
-        res.password === inputValue.password
-      ) {
-        setChecked(true);
-      } else {
-        alert("회원정보가 틀립니다.");
+      const req = await fetch(`/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: inputValue.userId.trim(),
+          password: inputValue.password.trim(),
+        }),
+      });
+      if (!req.ok) {
+        alert("회원정보가 일치하지 않습니다.");
+        return;
       }
+      setChecked(true);
     } catch (error) {
       console.error(error);
     }
   };
 
+  // 실제 변경
   const onClick = async () => {
-    if (inputValue.value.length < 3) {
-      return;
-    }
-    if (error) {
-      return;
-    }
+    if (inputValue.value.trim().length < 3) return;
+    if (error) return;
 
     try {
-      await fetch(`/user/${id}`, {
+      const res = await fetch(`/user/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(content.body),
       });
+      if (!res.ok) {
+        alert("변경에 실패했습니다.");
+        return;
+      }
     } catch (error) {
       console.error(error);
     } finally {
@@ -75,19 +71,26 @@ export const ChangeLoginInfModal = ({ id, changeId }) => {
     }
   };
 
+  // 아이디 중복 체크 (아이디 변경일 때만)
   useEffect(() => {
     setError(false);
+    if (!changeId || !inputValue.value.trim()) return;
 
     const controller = new AbortController();
     const signal = controller.signal;
 
     const checkId = async () => {
       try {
-        const req = await fetch(`/user?userId=${inputValue.value}`, { signal });
+        const req = await fetch(
+          `/user?userId=${encodeURIComponent(inputValue.value.trim())}`,
+          { signal },
+        );
+        if (!req.ok) return;
         const res = await req.json();
-        if (res.length === 1) {
-          setError(true);
-        }
+        const existing = Array.isArray(res)
+          ? res.find((u) => Number(u.id) !== Number(id))
+          : null;
+        setError(!!existing);
       } catch (error) {
         console.error(error);
       }
@@ -95,7 +98,7 @@ export const ChangeLoginInfModal = ({ id, changeId }) => {
     checkId();
 
     return () => controller.abort();
-  }, [inputValue.value]);
+  }, [inputValue.value, changeId, id]);
 
   return (
     <div className="min-w-96">
@@ -111,36 +114,37 @@ export const ChangeLoginInfModal = ({ id, changeId }) => {
           <Input
             value={inputValue.value}
             onChange={(e) => onChange(e, "value")}
-            placeholder={changeId ? "아이디" : "비밀번호"}
+            placeholder={content.placeholder}
             error={error}
             className="mb-2"
             message={"이미 존재하는 아이디입니다."}
           >
-            {changeId ? "아이디" : "비밀번호"}
+            {changeId ? "새 아이디" : "새 비밀번호"}
           </Input>
           <Button onClick={onClick}>변경하기</Button>
         </>
       ) : (
         <>
           <p className="mb-2 text-sm text-brand-sub text-center">
-            {content.placeholder}
+            사용중인 아이디와 비밀번호를 입력해주세요
           </p>
           <Input
             value={inputValue.userId}
             onChange={(e) => onChange(e, "userId")}
-            placeholder="아이디"
+            placeholder="현재 아이디"
             minLength={3}
           >
-            아이디
+            현재 아이디
           </Input>
           <Input
             value={inputValue.password}
             onChange={(e) => onChange(e, "password")}
-            placeholder="비밀번호"
+            placeholder="현재 비밀번호"
             minLength={3}
             className="mb-4"
+            type="password"
           >
-            비밀번호
+            현재 비밀번호
           </Input>
           <Button onClick={checkUserInf}>확인하기</Button>
         </>

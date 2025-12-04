@@ -5,9 +5,14 @@ services:
     image: mysql:8
     container_name: semester_db
     restart: always
+    command: [
+      "--character-set-server=utf8mb4",
+      "--collation-server=utf8mb4_unicode_ci"
+    ]
     environment:
       MYSQL_ROOT_PASSWORD: 1234
       MYSQL_DATABASE: localsemester
+      TZ: Asia/Seoul
     ports:
       - "3307:3306"
     volumes:
@@ -31,9 +36,10 @@ services:
       DB_DATABASE: localsemester
       DB_SYNCHRONIZE: "true"
       DB_LOGGING: "true"
-      PORT: 3000
+      PORT: 4000
+      TZ: Asia/Seoul
     ports:
-      - "4000:3000"
+      - "4000:4000"
     command: npm run start:dev
     volumes:
       - ./backend:/app

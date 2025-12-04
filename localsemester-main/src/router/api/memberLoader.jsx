@@ -1,10 +1,11 @@
-import getPhoto from "../../util/getPhoto";
+﻿import getPhoto from "../../util/getPhoto";
+import defaultImg from "../../assets/originalimg.png";
 
 export const memberLoader = async () => {
   try {
     const [memberRes, userRes] = await Promise.all([
-      fetch("http://localhost:5000/member"),
-      fetch("http://localhost:5000/user"),
+      fetch("/member"),
+      fetch("/user"),
     ]);
 
     const [members, users] = await Promise.all([
@@ -15,12 +16,16 @@ export const memberLoader = async () => {
     const mergedMembers = await Promise.all(
       members.map(async (member) => {
         const user = users.find((u) => u.id === member.userId);
-        const photo = user?.photoId ? await getPhoto(user.photoId) : "";
+        let photo = defaultImg;
+        if (user?.photoId) {
+          const url = await getPhoto(user.photoId);
+          photo = url || defaultImg;
+        }
 
         return {
           id: member.id,
           userId: member.userId,
-          username: user?.username || "알수없음",
+          username: user?.username || "알 수 없음",
           article: member.article,
           photo,
         };

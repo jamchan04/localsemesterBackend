@@ -5,7 +5,6 @@ import "./mycrop.css";
 import { useMyProfile } from "../../../store/myprofile";
 import { SelectPhotoArea } from "./selectPhotoArea";
 import { useFetch } from "../../../hooks/useFetch";
-import { checkAuth } from "../../../auth/auth";
 
 export const ImageCropper = ({ closeModal, id, editorHandler }) => {
   const [imgSrc, setImgSrc] = useState("");
@@ -75,18 +74,14 @@ export const ImageCropper = ({ closeModal, id, editorHandler }) => {
   };
 
   const selectImage = () => {
+    if (!imgSrc && !previewUrl) return;
     setImgSrc(false);
     setImage(true);
   };
 
   const editProfilePhoto = async () => {
-    const session = await checkAuth();
-
-    if (!session) {
-      alert("본인 인증에 실패했습니다.");
-      return;
-    }
-
+    const photoSrc = previewUrl || imgSrc;
+    if (!photoSrc) return;
     try {
       const getPhotoId = await fetch(`/user/${id}`);
       const res = await getPhotoId.json();
@@ -96,7 +91,7 @@ export const ImageCropper = ({ closeModal, id, editorHandler }) => {
           url: `/photo/${res.photoId}`,
           method: "PATCH",
           body: {
-            src: previewUrl,
+            src: photoSrc,
           },
         });
       } else {
@@ -104,7 +99,7 @@ export const ImageCropper = ({ closeModal, id, editorHandler }) => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            src: previewUrl,
+            src: photoSrc,
           }),
         });
         const response = await postProfilePhoto.json();
@@ -118,7 +113,7 @@ export const ImageCropper = ({ closeModal, id, editorHandler }) => {
     } catch (error) {
       console.log("error : ", error);
     } finally {
-      editMyProfile("profilePhoto", previewUrl);
+      editMyProfile("profilePhoto", photoSrc);
       editorHandler(false);
       closeModal();
     }
@@ -137,7 +132,7 @@ export const ImageCropper = ({ closeModal, id, editorHandler }) => {
         {image ? (
           <p
             onClick={editProfilePhoto}
-            className="font-semibold text-[#38b4ff] hover:text-[#31a2e6]"
+            className="font-semibold text-[#38b4ff] hover:text-[#31a2e6] cursor-pointer"
           >
             완료
           </p>
@@ -146,8 +141,8 @@ export const ImageCropper = ({ closeModal, id, editorHandler }) => {
             onClick={imgSrc ? selectImage : null}
             className={`font-semibold  ${
               imgSrc !== ""
-                ? "text-[#38b4ff] hover:text-[#31a2e6]"
-                : "text-brand-sub"
+                ? "text-[#38b4ff] hover:text-[#31a2e6] cursor-pointer"
+                : "text-brand-sub cursor-not-allowed"
             }`}
           >
             확인

@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { PostViewer } from "../../components/form/postForm/postViewer";
 import { Container } from "../../components/container/container";
 import { useMyProfile } from "../../store/myprofile";
-import { CommentBox } from "../..//components/box/commentBox";
+import { CommentBox } from "../../components/box/commentBox";
 import { CommentForm } from "../../components/form/commentForm/commentForm";
 
 export const PostDetail = () => {
@@ -12,7 +12,6 @@ export const PostDetail = () => {
   const [posts, setPosts] = useState(null);
   const [comments, setComments] = useState([]);
   const me = posts?.userId === myId;
-  // 게시글 작성자와 현재 로그인한 사용자가 같은지 확인
   const navigator = useNavigate();
 
   useEffect(() => {
@@ -22,31 +21,29 @@ export const PostDetail = () => {
         const res = await req.json();
         setPosts(res);
       } catch (error) {
-        console.error("게시글 가져오기 중 오류 발생:", error);
+        console.error("게시글 가져오는 중 오류 발생:", error);
       }
     };
-
-    // 게시글 정보 가져오기
     getPost();
   }, [id]);
 
   useEffect(() => {
-    // 댓글 정보 가져오기
+    setComments([]);
     fetch(`/postComment?postId=${id}`)
       .then((res) => res.json())
       .then((data) => {
         setComments(data);
       })
       .catch((error) => {
-        console.error("댓글 가져오기 중 오류 발생:", error);
+        console.error("댓글 가져오는 중 오류 발생:", error);
       });
-  }, []);
+  }, [id]);
 
   const getcomments = (newComments) => {
     setComments((state) => [...state, newComments]);
   };
-  const commentDelete = (id) => {
-    setComments((state) => state.filter((item) => item?.id !== id));
+  const commentDelete = (commentId) => {
+    setComments((state) => state.filter((item) => item?.id !== commentId));
   };
 
   if (!posts) return <p></p>;
@@ -54,24 +51,11 @@ export const PostDetail = () => {
   return (
     <>
       <Container className="relative pb-64">
-        <PostViewer
-          item={posts}
-          me={me}
-          url="/post"
-          deletePosting={() => navigator(-1)}
-        />
+        <PostViewer item={posts} me={me} url="/post" deletePosting={() => navigator(-1)} />
       </Container>
       <Container>
-        <CommentForm
-          articleId={id}
-          url={"/postComment"}
-          getComment={getcomments}
-        />
-        <CommentBox
-          comment={comments}
-          url={"/postComment"}
-          deleteComment={commentDelete}
-        />
+        <CommentForm articleId={id} url="/postComment" getComment={getcomments} />
+        <CommentBox comment={comments} url="/postComment" deleteComment={commentDelete} />
       </Container>
     </>
   );

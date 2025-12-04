@@ -2,10 +2,14 @@ import { useNavigate } from "react-router-dom";
 import defaultPhoto from "../../assets/originalimg.png";
 import getPhoto from "../../util/getPhoto";
 import { useEffect, useState } from "react";
+import { useMyProfile } from "../../store/myprofile";
 
 export const ProfilePhotoContainer = ({ id, width, alt }) => {
   const navigate = useNavigate();
   const [profilePhoto, setProfilePhoto] = useState("");
+  const { id: myId, profilePhoto: myProfilePhoto } = useMyProfile(
+    (state) => state.myProfile,
+  );
 
   const onClick = () => {
     navigate("/profile/" + id);
@@ -16,11 +20,11 @@ export const ProfilePhotoContainer = ({ id, width, alt }) => {
       const getPhotoId = await fetch(`/user?id=${id}`);
       const response = await getPhotoId.json();
 
-      const profileImg = await getPhoto(response[0].photoId);
-      setProfilePhoto(profileImg);
+      const profileImg = await getPhoto(response[0]?.photoId);
+      setProfilePhoto(profileImg || "");
     };
     photo();
-  }, [id]);
+  }, [id, myId, myProfilePhoto]);
 
   return (
     <div

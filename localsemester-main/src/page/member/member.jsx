@@ -42,13 +42,14 @@ const Member = () => {
   };
 
   const handleEditSave = async (newMsg) => {
-    if (!isAdmin || selectedMember?.userId !== myId) {
-      alert("403 Forbidden: 본인 소유 멤버만 수정할 수 있습니다.");
+    const canEdit = isAdmin || selectedMember?.userId === myId;
+    if (!canEdit) {
+      alert("본인 카드만 수정할 수 있습니다.");
       return;
     }
     const result = await fetcher(
       {
-        url: `http://localhost:5000/member/${selectedMember.id}`,
+        url: `/member/${selectedMember.id}`,
         method: "PATCH",
         body: { article: newMsg },
       },
@@ -66,15 +67,14 @@ const Member = () => {
   };
 
   const handleDelete = async () => {
-    if (!isAdmin || selectedMember?.userId !== myId) {
-      return;
-    }
+    const canEdit = isAdmin || selectedMember?.userId === myId;
+    if (!canEdit) return;
     const ok = window.confirm("정말 삭제하시겠습니까?");
     if (!ok) return;
 
     const result = await fetcher(
       {
-        url: `http://localhost:5000/member/${selectedMember.id}`,
+        url: `/member/${selectedMember.id}`,
         method: "DELETE",
       },
       () => {
@@ -83,7 +83,12 @@ const Member = () => {
         closeModal();
       }
     );
-    if (!result) alert("삭제에 실패했습니다.");
+    // 204 등의 경우 result가 없을 수 있으므로 추가 알림 없이 상태만 유지
+    if (!result) {
+      setMembers((prev) => prev.filter((m) => m.id !== selectedMember.id));
+      setSelectedMember(null);
+      closeModal();
+    }
   };
 
   const handleCreate = async () => {
@@ -92,7 +97,7 @@ const Member = () => {
 
     const result = await fetcher(
       {
-        url: "http://localhost:5000/member",
+        url: "/member",
         method: "POST",
         body: { article: newMessage, userId: myId },
       },

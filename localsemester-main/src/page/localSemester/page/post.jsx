@@ -61,7 +61,9 @@ export const LocalSemesterPost = () => {
           <PostViewer
             item={article}
             me={me}
-            url="/localsemester"
+            url="/localSemester"
+            apiUrl="/semester"
+            editPath="/localSemesterEdit"
             deletePosting={() => nav(-1)}
           />
         )}

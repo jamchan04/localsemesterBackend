@@ -29,7 +29,11 @@ export const useFetch = () => {
             : undefined,
       });
 
-      const responseData = await request.json();
+      let responseData = null;
+      if (request.status !== 204) {
+        const text = await request.text();
+        responseData = text ? JSON.parse(text) : null;
+      }
 
       setResponse(responseData);
 

@@ -29,8 +29,8 @@ export const SideMenuBar = ({ state, close }) => {
     },
   ];
 
-  const onLogOut = () => {
-    clearSession();
+  const onLogOut = async () => {
+    await clearSession();
     navigate("/login", { replace: true });
   };
 

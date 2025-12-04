@@ -1,5 +1,6 @@
 export default async function getPhoto(id) {
-  if (typeof id === "string") return "";
+  // If already a URL/path, return as-is
+  if (typeof id === "string") return id;
 
   try {
     const getPhoto = await fetch(`/photo?id=${id}`);
