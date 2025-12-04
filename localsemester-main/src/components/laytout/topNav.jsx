@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+﻿import { useEffect } from "react";
 import Logo from "../../assets/untityLogo.png";
 import { DisplayControler } from "../button/displayControler";
 import { MenuIcon } from "../button/menu";
@@ -7,10 +7,10 @@ import { TabButton } from "../button/tabButton";
 
 export const TopNav = ({ children, isLocalSemester }) => {
   const page = [
-    { path: "/", name: "홈" },
-    { path: "/localSemester", name: "현지학기제" },
+    { path: "/", name: "메인" },
+    { path: "/localSemester", name: "현지학기" },
     { path: "/post", name: "게시판" },
-    { path: "/member", name: "맴버" },
+    { path: "/member", name: "멤버" },
   ];
   const navbg =
     isLocalSemester[0] || isLocalSemester[1]
