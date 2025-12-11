@@ -1,3 +1,24 @@
+## Quick start (이 저장소용)
+
+`node_modules`는 항상 삭제한 상태로 배포/제출하고, 필요할 때마다 아래처럼 다시 생성하면 됨
+
+### Docker로 한번에 실행 (권장)
+1. 루트에서 `docker compose up --build`
+   - 프런트 의존성은 `localsemester-main/package*.json` 기준으로 컨테이너 안에서 자동 설치
+   - 백엔드 의존성도 `backend/package*.json` 기준으로 컨테이너 안에서 자동 설치
+2. 접속 주소: 프런트 `http://localhost:3000`, 백엔드 `http://localhost:4000`, json-server `http://localhost:5000`
+3. 종료: `docker compose down` (DB까지 날리려면 `docker compose down --volumes`)
+
+### 로컬(호스트)에서 실행하고 싶을 때
+1. `backend` 폴더에서 `npm ci` (또는 `npm install`)
+2. `localsemester-main` 폴더에서 `npm ci` (또는 `npm install`)
+3. 터미널 2개로
+   - 백엔드: `cd backend && npm run start:dev`
+   - 프런트: `cd localsemester-main && npm start`
+4. 새로 설치가 필요하면 `backend/node_modules`, `localsemester-main/node_modules`를 지우고 위 명령을 다시 실행
+
+---
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>

@@ -11,7 +11,7 @@ import MemberNameList from "./component/memberNameList";
 import MemberModal from "./component/memberModal";
 
 const slogans = [
-  "함께 만드는 이름없는 팀.",
+  "함께 만드는 4조.",
   "우리의 기술과 경험으로 미래를 만듭니다.",
 ];
 
@@ -26,8 +26,6 @@ const Member = () => {
     closeModal: closeCreateModal,
   } = useModal();
   const [selectedMember, setSelectedMember] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editMessage, setEditMessage] = useState("");
   const [newMessage, setNewMessage] = useState("");
   const { id: myId, state: myState, username: myName, profilePhoto } =
     useMyProfile((state) => state.myProfile);
@@ -36,8 +34,6 @@ const Member = () => {
 
   const handleCardClick = (member) => {
     setSelectedMember(member);
-    setEditMessage(member.article || "");
-    setIsEditing(false);
     openModal();
   };
 
@@ -60,7 +56,6 @@ const Member = () => {
             m.id === selectedMember.id ? { ...m, article: newMsg } : m
           )
         );
-        setIsEditing(false);
       }
     );
     if (!result) alert("수정에 실패했습니다.");
@@ -167,10 +162,6 @@ const Member = () => {
       {isModal && selectedMember && (
         <MemberModal
           member={selectedMember}
-          isEditing={isEditing}
-          setIsEditing={setIsEditing}
-          editMessage={editMessage}
-          setEditMessage={setEditMessage}
           onClose={closeModal}
           onSave={(newMsg) => handleEditSave(newMsg)}
           onDelete={handleDelete}
@@ -188,7 +179,8 @@ const Member = () => {
         >
           <h3 className="text-lg font-semibold mb-3 text-center">멤버</h3>
           <textarea
-            className="w-full p-2 border rounded mb-3"
+            className="w-full p-2 border rounded mb-3 bg-white text-brand placeholder-gray-400
+                       dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 dark:placeholder-gray-300"
             rows={4}
             placeholder="소개글을 입력하세요"
             value={newMessage}

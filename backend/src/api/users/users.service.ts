@@ -69,6 +69,8 @@ export class UsersService {
       throw new BadRequestException('userId and password are required');
     }
 
+    const hashedPassword = await bcrypt.hash(dto.password, 10);
+
     const exists = await this.userRepository.findOne({
       where: [{ userId: dto.userId }, { email: dto.email }],
     });
@@ -80,7 +82,7 @@ export class UsersService {
       username: dto.username,
       userId: dto.userId,
       email: dto.email,
-      password: dto.password,
+      password: hashedPassword,
       state: dto.state ?? 1,
       createAt: dto.createAt ? new Date(dto.createAt) : new Date(),
       photoId: dto.photoId,

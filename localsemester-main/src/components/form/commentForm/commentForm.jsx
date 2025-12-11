@@ -39,6 +39,13 @@ export const CommentForm = ({ articleId, url, getComment }) => {
             createAt: createAt(),
           }),
         });
+
+        if (!response.ok) {
+          console.error("comment create failed", response.status);
+          alert("댓글 작성에 실패했습니다.");
+          return;
+        }
+
         const data = await response.json();
         getComment(data);
       }

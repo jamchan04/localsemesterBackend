@@ -46,6 +46,11 @@ const MyEditor = ({ url, exitPath, closeModal, callback, init, post }) => {
   const createPosting = async () => {
     if (!editor) return;
 
+    if (!id) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+
     const findFirstImageNode = (node) => {
       if (!node) return null;
       if (node.type === "image") return node;
@@ -97,7 +102,7 @@ const MyEditor = ({ url, exitPath, closeModal, callback, init, post }) => {
         title: title,
         article: article,
         createAt: createAt(),
-        userId: id,
+        userId: Number(id),
         src: src,
         photoId: photoId ?? null,
         username: username,
@@ -108,12 +113,15 @@ const MyEditor = ({ url, exitPath, closeModal, callback, init, post }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
-      const res = await req.json();
-      if (res) {
-        if (typeof callback === "function") return callback();
-
-        nav(exitPath);
+      if (!req.ok) {
+        console.error("post create failed", req.status);
+        alert("게시글 생성에 실패했습니다.");
+        return;
       }
+
+      const res = await req.json();
+      if (res && typeof callback === "function") return callback();
+      nav(exitPath);
     } catch (error) {
       console.error("오류:", error);
 

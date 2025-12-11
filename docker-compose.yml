@@ -59,6 +59,7 @@ services:
       PORT: 3000
       CHOKIDAR_USEPOLLING: "true"
       WATCHPACK_POLLING: "true"
+      REACT_APP_API_URL: http://backend:4000
     volumes:
       - ./localsemester-main:/app
       - frontend-node-modules:/app/node_modules

@@ -62,6 +62,8 @@ export class PostsService {
   }
 
   async create(dto: CreatePostDto): Promise<Post> {
+    // Temporary log to debug incoming payload shape.
+    console.log('[PostsService] create payload', dto);
     if (!dto.title || !dto.article || !dto.userId) {
       throw new BadRequestException('title, article, and userId are required');
     }

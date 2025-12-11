@@ -30,20 +30,20 @@ const MemberModal = ({ member, isAdmin, onClose, onSave, onDelete }) => {
         onError={(e) => (e.currentTarget.src = nullPhoto)}
       />
 
-      <h2 className="text-xl font-bold text-center mb-2 text-brand dark:text-brand-dark">
+      <h2 className="text-xl font-bold text-center mb-2 text-brand dark:text-white">
         {member.username}
       </h2>
 
       {isEditing ? (
         <textarea
-          className="w-full p-2 border rounded mb-3 bg-white text-brand dark:bg-gray-700 dark:text-brand-dark"
+          className="w-full p-2 border rounded mb-3 bg-white text-brand dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 placeholder-gray-400 dark:placeholder-gray-300"
           value={editMessage}
           onChange={(e) => setEditMessage(e.target.value)}
           rows={4}
           placeholder="내용을 입력하세요"
         />
       ) : (
-        <p className="text-center text-brand-sub dark:text-gray-300 whitespace-pre-wrap">
+        <p className="text-center text-brand-sub dark:text-gray-100 whitespace-pre-wrap">
           {member.article}
         </p>
       )}
