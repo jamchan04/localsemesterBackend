@@ -14,10 +14,12 @@ dotenv.config({ path: envPath, override: true });
 console.log(`[MAIN] DB_PASSWORD: ${process.env.DB_PASSWORD}`);
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  // Disable the default body parser so we don't double-parse and hang JSON requests.
+  const app = await NestFactory.create(AppModule, { bodyParser: false });
   // allow bigger payloads for base64 images
   app.use(json({ limit: '10mb' }));
   app.use(urlencoded({ extended: true, limit: '10mb' }));
+  app.enableCors({ origin: true, credentials: true });
   app.useGlobalFilters(new AllExceptionsFilter());
   app.useGlobalInterceptors(new LoggingInterceptor());
   app.useGlobalPipes(

@@ -5,6 +5,7 @@ import { fromNow } from "../../util/fromNow";
 import noimage from "../../assets/noimage.jpg";
 import defaultImg from "../../assets/originalimg.png";
 import { useMyProfile } from "../../store/myprofile";
+import { withApiBase } from "../../util/apiClient";
 
 export const PostCard = ({ item }) => {
   const { id, title, article, photoId, createAt, userId, username, src } = item;
@@ -38,7 +39,7 @@ export const PostCard = ({ item }) => {
         // ignore parse error
       }
       if (firstImageSrc) {
-        setThumbnail(firstImageSrc);
+        setThumbnail(withApiBase(firstImageSrc));
         return;
       }
 

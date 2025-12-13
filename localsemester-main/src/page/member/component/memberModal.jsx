@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import nullPhoto from "../../../assets/originalimg.png";
 import { Modal } from "../../../components/modal/modal";
+import { withApiBase } from "../../../util/apiClient";
 
 const MemberModal = ({ member, isAdmin, onClose, onSave, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -24,7 +25,7 @@ const MemberModal = ({ member, isAdmin, onClose, onSave, onDelete }) => {
   return (
     <Modal closeModal={onClose} className="max-w-md w-full p-6">
       <img
-        src={member.photo || nullPhoto}
+        src={withApiBase(member.photo) || nullPhoto}
         alt={member.username}
         className="w-28 h-28 mx-auto rounded-full object-cover mb-4"
         onError={(e) => (e.currentTarget.src = nullPhoto)}
